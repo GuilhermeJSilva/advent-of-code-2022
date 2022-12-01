@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 use std::sync;
 mod y2019;
+mod y2022;
 
 type SolutionMap = HashMap<String, sync::Arc<dyn AocSolution>>;
 
@@ -19,7 +20,8 @@ pub struct Solutions {
 
 impl Solutions {
     pub fn new() -> Self {
-        let providers: Vec<Box<dyn SolutionProvider>> = vec![y2019::Solutions2019::new()];
+        let providers: Vec<Box<dyn SolutionProvider>> =
+            vec![y2019::Solutions2019::new(), y2022::Solutions2022::new()];
         let mut solutions = Solutions {
             solutions: HashMap::new(),
         };
