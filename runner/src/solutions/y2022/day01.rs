@@ -13,14 +13,7 @@ fn parse_elfs(input: String) -> Vec<Vec<u32>> {
     input
         .split("\n\n")
         .into_iter()
-        .map(|elf| {
-            elf.split("\n")
-                .into_iter()
-                .map(str::parse)
-                .filter(Result::is_ok)
-                .map(Result::unwrap)
-                .collect()
-        })
+        .map(|elf| elf.lines().flat_map(str::parse).collect())
         .collect()
 }
 
