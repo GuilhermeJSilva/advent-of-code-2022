@@ -9,7 +9,7 @@ DAY_TEMPLATE="day.template.rs"
 FOLDER_PATH="$BASE_DIR/y$YEAR"
 MOD_FILE="$FOLDER_PATH/mod.rs"
 
-MOD_DAYS="$(for val in {1..25}; do printf 'mod day%02d;' $val $val; done)"
+MOD_DAYS="$(for val in {1..25}; do printf 'mod day%02d;' $val; done)"
 SOLUTIONS="$(for val in {1..25}; do printf 'day%02d::Day%02d::new(),' $val $val; done)"
 SOLUTIONS=${SOLUTIONS::-1}
 
