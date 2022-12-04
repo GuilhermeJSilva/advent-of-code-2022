@@ -37,10 +37,7 @@ impl Interval {
             start: self.start.max(other.start),
             end: self.end.min(other.end),
         };
-        if interval_overlap.start <= interval_overlap.end
-            && self.contains(&interval_overlap)
-            && other.contains(&interval_overlap)
-        {
+        if interval_overlap.start <= interval_overlap.end {
             return Some(interval_overlap);
         }
         None
