@@ -86,7 +86,7 @@ impl AocSolution for Day03 {
             .map(priority)
             .sum();
 
-        return format!("{}", res);
+        format!("{}", res)
     }
 
     fn solve_part2(&self, input: String) -> String {
@@ -101,7 +101,7 @@ impl AocSolution for Day03 {
             .map(|collection| collection.into_iter().next().unwrap())
             .map(priority)
             .sum();
-        return format!("{}", res);
+        format!("{}", res)
     }
 }
 

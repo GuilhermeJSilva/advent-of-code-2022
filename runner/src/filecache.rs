@@ -31,14 +31,14 @@ impl FileCache {
     }
 
     pub fn retrieve(&self, file_name: &str) -> Option<String> {
-        return match fs::read_to_string(self.full_path(file_name)) {
+        match fs::read_to_string(self.full_path(file_name)) {
             Ok(contents) => Some(contents),
             _ => None,
-        };
+        }
     }
 
     fn full_path(&self, file_name: &str) -> Box<path::Path> {
         let true_filename = base16ct::lower::encode_string(&Sha256::digest(file_name));
-        return self.base_dir.join(true_filename).into_boxed_path();
+        self.base_dir.join(true_filename).into_boxed_path()
     }
 }

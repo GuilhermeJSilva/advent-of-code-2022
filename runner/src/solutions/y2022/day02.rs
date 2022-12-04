@@ -47,7 +47,7 @@ impl Day02 {
         } else if (player + 2) % 3 == opponent {
             return 6;
         }
-        return 0;
+        0
     }
 }
 
@@ -56,23 +56,23 @@ impl AocSolution for Day02 {
         let score: u32 = input
             .lines()
             .map(|game| {
-                let opponent = Day02::from_opponent(game.chars().nth(0).unwrap());
+                let opponent = Day02::from_opponent(game.chars().next().unwrap());
                 let player = Day02::from_player(game.chars().nth(2).unwrap());
-                return Day02::shape_score(player) + Day02::score(player, opponent);
+                Day02::shape_score(player) + Day02::score(player, opponent)
             })
             .sum();
-        return format!("{}", score);
+        format!("{}", score)
     }
 
     fn solve_part2(&self, input: String) -> String {
         let score: u32 = input
             .lines()
             .map(|game| {
-                let opponent = Day02::from_opponent(game.chars().nth(0).unwrap());
+                let opponent = Day02::from_opponent(game.chars().next().unwrap());
                 let player = Day02::to_result(game.chars().nth(2).unwrap(), opponent);
-                return Day02::shape_score(player) + Day02::score(player, opponent);
+                Day02::shape_score(player) + Day02::score(player, opponent)
             })
             .sum();
-        return format!("{}", score);
+        format!("{}", score)
     }
 }

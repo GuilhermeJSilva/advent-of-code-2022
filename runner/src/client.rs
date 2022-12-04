@@ -17,7 +17,7 @@ impl AocCLient {
         let cache_base_dir = path::PathBuf::from_str("tmp/aoc")
             .expect("Base dir should be a valid path")
             .into_boxed_path();
-        return AocCLient {
+        AocCLient {
             base_url,
             client: Client::builder()
                 .cookie_provider(sync::Arc::new(jar))
@@ -25,24 +25,22 @@ impl AocCLient {
                 .unwrap(),
 
             file_cache: filecache::FileCache::new(cache_base_dir),
-        };
+        }
     }
 
     async fn get_input_remote(&self, year: u16, day: u8) -> String {
-        let resp = self
-            .client
+        self.client
             .get(format!("{}{}/day/{}/input", self.base_url, year, day))
             .send()
             .await
             .unwrap()
             .text()
             .await
-            .unwrap();
-        return resp;
+            .unwrap()
     }
 
     fn get_input_filename(year: u16, day: u8) -> String {
-        return format!("input-{}-{}.txt", year, day);
+        format!("input-{}-{}.txt", year, day)
     }
 
     pub async fn get_input(&self, year: u16, day: u8) -> String {
@@ -52,7 +50,7 @@ impl AocCLient {
             None => {
                 let input = self.get_input_remote(year, day).await;
                 self.file_cache.store(&filename, &input);
-                return input;
+                input
             }
         }
     }

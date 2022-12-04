@@ -25,7 +25,7 @@ impl AocSolution for Day01 {
             .map(|elf| elf.into_iter().sum())
             .max()
             .unwrap();
-        return format!("{}", max);
+        format!("{}", max)
     }
 
     fn solve_part2(&self, input: String) -> String {
@@ -33,6 +33,6 @@ impl AocSolution for Day01 {
         let mut total_elfs: Vec<u32> = elfs.into_iter().map(|elf| elf.into_iter().sum()).collect();
         total_elfs.sort_by(|a, b| b.cmp(a));
         let max: u32 = total_elfs.into_iter().take(3).sum();
-        return format!("{}", max);
+        format!("{}", max)
     }
 }

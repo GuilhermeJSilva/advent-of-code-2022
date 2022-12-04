@@ -17,7 +17,9 @@ struct Interval {
 
 impl From<&str> for Interval {
     fn from(input: &str) -> Self {
-        let (start, end) = input.split_once("-").expect("Interval should be separated by -");
+        let (start, end) = input
+            .split_once('-')
+            .expect("Interval should be separated by -");
         Interval {
             start: start.parse().expect("Intervals should be u32"),
             end: end.parse().expect("Intervals should be u32"),
@@ -50,12 +52,10 @@ impl AocSolution for Day04 {
         let res = input
             .lines()
             .map(|pair| {
-                let (left, right) = pair.split_once(",").unwrap();
+                let (left, right) = pair.split_once(',').unwrap();
                 (Interval::from(left), Interval::from(right))
             })
-            .filter(|(left, right)| {
-                left.contains(&right) || right.contains(&left)
-            })
+            .filter(|(left, right)| left.contains(right) || right.contains(left))
             .count();
 
         format!("{:?}", res)
@@ -65,7 +65,7 @@ impl AocSolution for Day04 {
         let res = input
             .lines()
             .map(|pair| {
-                let (left, right) = pair.split_once(",").unwrap();
+                let (left, right) = pair.split_once(',').unwrap();
                 (Interval::from(left), Interval::from(right))
             })
             .flat_map(|(left, right)| left.overlap(&right))

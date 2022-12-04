@@ -28,14 +28,14 @@ impl Solutions {
         providers
             .iter()
             .for_each(|provider| provider.register(&mut solutions));
-        return solutions;
+        solutions
     }
 
     pub fn get_solution(&self, year: u16, day: u8) -> sync::Arc<dyn AocSolution> {
         return self
             .solutions
             .get(&Self::get_sol_key(year, day))
-            .expect(&format!("Solution for day {} of {} not found!", year, day))
+            .unwrap_or_else(|| panic!("Solution for day {} of {} not found!", year, day))
             .clone();
     }
 
@@ -45,6 +45,6 @@ impl Solutions {
     }
 
     fn get_sol_key(year: u16, day: u8) -> String {
-        return format!("{}d{}", year, day);
+        format!("{}d{}", year, day)
     }
 }
