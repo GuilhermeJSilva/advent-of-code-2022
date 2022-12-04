@@ -17,10 +17,10 @@ struct Interval {
 
 impl From<&str> for Interval {
     fn from(input: &str) -> Self {
-        let values: Vec<u32> = input.splitn(2, "-").flat_map(str::parse::<u32>).collect();
+        let (start, end) = input.split_once("-").expect("Interval should be separated by -");
         Interval {
-            start: values[0],
-            end: values[1],
+            start: start.parse().expect("Intervals should be u32"),
+            end: end.parse().expect("Intervals should be u32"),
         }
     }
 }
@@ -35,7 +35,10 @@ impl Interval {
             start: self.start.max(other.start),
             end: self.end.min(other.end),
         };
-        if interval_overlap.start <= interval_overlap.end && self.contains(&interval_overlap) && other.contains(&interval_overlap) {
+        if interval_overlap.start <= interval_overlap.end
+            && self.contains(&interval_overlap)
+            && other.contains(&interval_overlap)
+        {
             return Some(interval_overlap);
         }
         None
@@ -47,12 +50,11 @@ impl AocSolution for Day04 {
         let res = input
             .lines()
             .map(|pair| {
-                pair.splitn(2, ",")
-                    .map(Interval::from)
-                    .collect::<Vec<Interval>>()
+                let (left, right) = pair.split_once(",").unwrap();
+                (Interval::from(left), Interval::from(right))
             })
-            .filter(|intervals| {
-                intervals[0].contains(&intervals[1]) || intervals[1].contains(&intervals[0])
+            .filter(|(left, right)| {
+                left.contains(&right) || right.contains(&left)
             })
             .count();
 
@@ -63,11 +65,10 @@ impl AocSolution for Day04 {
         let res = input
             .lines()
             .map(|pair| {
-                pair.splitn(2, ",")
-                    .map(Interval::from)
-                    .collect::<Vec<Interval>>()
+                let (left, right) = pair.split_once(",").unwrap();
+                (Interval::from(left), Interval::from(right))
             })
-            .flat_map(|intervals| intervals[0].overlap(&intervals[1]))
+            .flat_map(|(left, right)| left.overlap(&right))
             .count();
 
         format!("{:?}", res)
@@ -85,4 +86,3 @@ mod tests {
         assert_eq!(solver.solve_part2(INPUT.into()), "4");
     }
 }
-
