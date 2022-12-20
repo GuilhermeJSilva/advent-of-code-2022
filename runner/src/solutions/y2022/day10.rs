@@ -1,5 +1,5 @@
 use super::super::AocSolution;
-use std::{str::FromStr, sync};
+use std::{iter::once, str::FromStr, sync};
 
 pub struct Day10;
 
@@ -34,82 +34,47 @@ struct Computer {
 }
 
 fn get_computer_states<'a>(input: &'a str) -> impl Iterator<Item = Computer> + 'a {
-        input
-            .lines()
-            .flat_map(str::parse::<Instruction>)
-            .scan(
-                Computer {
-                    current_cycle: 1,
-                    register_x: 1,
-                },
-                |state, command| match command {
-                    Instruction::Noop => {
-                        let clock_states = Some(vec![Computer {
+    input
+        .lines()
+        .flat_map(str::parse::<Instruction>)
+        .scan(
+            Computer {
+                current_cycle: 1,
+                register_x: 1,
+            },
+            |state, command| match command {
+                Instruction::Noop => {
+                    let clock_states = Some(vec![Computer {
+                        current_cycle: state.current_cycle,
+                        register_x: state.register_x,
+                    }]);
+                    state.current_cycle += 1;
+                    clock_states
+                }
+                Instruction::Add(value) => {
+                    let clock_states = Some(vec![
+                        Computer {
                             current_cycle: state.current_cycle,
                             register_x: state.register_x,
-                        }]);
-                        state.current_cycle += 1;
-                        clock_states
-                    }
-                    Instruction::Add(value) => {
-                        let clock_states = Some(vec![
-                            Computer {
-                                current_cycle: state.current_cycle,
-                                register_x: state.register_x,
-                            },
-                            Computer {
-                                current_cycle: state.current_cycle + 1,
-                                register_x: state.register_x,
-                            },
-                        ]);
-                        state.current_cycle += 2;
-                        state.register_x += value;
-                        clock_states
-                    }
-                },
-            )
-            .flat_map(|states| states.into_iter())
+                        },
+                        Computer {
+                            current_cycle: state.current_cycle + 1,
+                            register_x: state.register_x,
+                        },
+                    ]);
+                    state.current_cycle += 2;
+                    state.register_x += value;
+                    clock_states
+                }
+            },
+        )
+        .flat_map(|states| states.into_iter())
 }
 
 impl AocSolution for Day10 {
     fn solve_part1(&self, input: String) -> String {
-        let sum: i64 = input
-            .lines()
-            .flat_map(str::parse::<Instruction>)
-            .scan(
-                Computer {
-                    current_cycle: 1,
-                    register_x: 1,
-                },
-                |state, command| match command {
-                    Instruction::Noop => {
-                        let clock_states = Some(vec![Computer {
-                            current_cycle: state.current_cycle,
-                            register_x: state.register_x,
-                        }]);
-                        state.current_cycle += 1;
-                        clock_states
-                    }
-                    Instruction::Add(value) => {
-                        let clock_states = Some(vec![
-                            Computer {
-                                current_cycle: state.current_cycle,
-                                register_x: state.register_x,
-                            },
-                            Computer {
-                                current_cycle: state.current_cycle + 1,
-                                register_x: state.register_x,
-                            },
-                        ]);
-                        state.current_cycle += 2;
-                        state.register_x += value;
-                        clock_states
-                    }
-                },
-            )
-            .flat_map(|states| states.into_iter())
+        let sum: i64 = get_computer_states(&input)
             .filter(|state| (state.current_cycle + 20) % 40 == 0)
-            .inspect(|state| println!("{:?}", state))
             .map(|state| state.register_x * state.current_cycle as i64)
             .sum();
 
@@ -118,8 +83,18 @@ impl AocSolution for Day10 {
 
     fn solve_part2(&self, input: String) -> String {
         get_computer_states(&input)
-            .map(|state| state.current_cycle == state.register_x - 1 || state.current_cycle == state.register_x || state.current_cycle == state.register_x + 1)
+            // .inspect(|state| println!("{:?}", state))
+            // .inspect(|state| println!("{:?}", ((state.current_cycle - 1) % 40) + 1))
+            .map(|state| (((state.current_cycle - 1) % 40) - state.register_x).abs() <= 1)
             .map(|is_on| if is_on { '#' } else { '.' })
+            .enumerate()
+            .flat_map(|(i, c)| {
+                if i % 40 == 0 && i != 0 {
+                    Some('\n')
+                } else {
+                    None
+                }.into_iter().chain(once(c))
+            })
             .collect()
     }
 }
@@ -133,5 +108,12 @@ mod test {
     fn part1() {
         let solution = Day10::new();
         assert_eq!(solution.solve_part1(INPUT.to_owned()), "13140")
+    }
+
+    #[test]
+    fn part2() {
+        let solution = Day10::new();
+        let expected = "##..##..##..##..##..##..##..##..##..##..\n###...###...###...###...###...###...###.\n####....####....####....####....####....\n#####.....#####.....#####.....#####.....\n######......######......######......####\n#######.......#######.......#######.....";
+        assert_eq!(solution.solve_part2(INPUT.to_owned()), expected)
     }
 }
