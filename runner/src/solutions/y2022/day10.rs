@@ -33,7 +33,7 @@ struct Computer {
     register_x: i64,
 }
 
-fn get_computer_states<'a>(input: &'a str) -> impl Iterator<Item = Computer> + 'a {
+fn get_computer_states(input: &'_ str) -> impl Iterator<Item = Computer> + '_ {
     input
         .lines()
         .flat_map(str::parse::<Instruction>)
@@ -93,7 +93,9 @@ impl AocSolution for Day10 {
                     Some('\n')
                 } else {
                     None
-                }.into_iter().chain(once(c))
+                }
+                .into_iter()
+                .chain(once(c))
             })
             .collect()
     }

@@ -25,9 +25,7 @@ impl FromStr for Towers {
         let size = last_line
             .split(' ')
             .rev()
-            .inspect(|v| println!("{:?}", v))
-            .filter(|v| v.len() > 0)
-            .next()
+            .inspect(|v| println!("{:?}", v)).find(|v| !v.is_empty())
             .map(str::parse::<usize>)
             .expect("Last line is empty")
             .expect("Last element is a nunber");

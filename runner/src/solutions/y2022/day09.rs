@@ -98,7 +98,7 @@ impl Snake {
             let (pos_x, pos_y) = self.parts.get(i).unwrap();
             let pos_x = (pos_x + board_size as i64 / 2) as usize;
             let pos_y = (pos_y + board_size as i64 / 2) as usize;
-            *board.get_mut(pos_y).unwrap().get_mut(pos_x).unwrap() = ('0' as u8 + i as u8) as char;
+            *board.get_mut(pos_y).unwrap().get_mut(pos_x).unwrap() = (b'0' + i as u8) as char;
         }
         for line in board {
             println!("{:?}", line);

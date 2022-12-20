@@ -32,7 +32,7 @@ impl FromStr for Forest {
 }
 
 impl Forest {
-    fn mark_visible<I>(&self, is_visible: &mut Vec<Vec<bool>>, y_range: I, x_range: I)
+    fn mark_visible<I>(&self, is_visible: &mut [Vec<bool>], y_range: I, x_range: I)
     where
         I: Iterator<Item = usize> + Clone,
     {

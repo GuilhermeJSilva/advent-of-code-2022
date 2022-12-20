@@ -92,7 +92,7 @@ impl FromStr for Command {
         let first_line = s.lines().take(1).next().unwrap();
         let command_name = first_line.split_whitespace().next().unwrap();
         match command_name {
-            "ls" => Ok(Command::Ls(to_files(s.split_once("\n").unwrap().1))),
+            "ls" => Ok(Command::Ls(to_files(s.split_once('\n').unwrap().1))),
             "cd" => Ok(Command::Cd(first_line.parse().unwrap())),
             _ => Err("Command not supported"),
         }
@@ -202,10 +202,10 @@ impl AocSolution for Day07 {
             if current_sum >= min_delete {
                 min_deletion = min_deletion.min(current_sum);
             }
-            return MinimumDelete {
+            MinimumDelete {
                 current_sum,
                 min_deletion,
-            };
+            }
         });
         format!("{:?}", res.min_deletion)
     }
